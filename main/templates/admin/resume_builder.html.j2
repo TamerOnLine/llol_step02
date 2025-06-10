@@ -1,0 +1,138 @@
+{% extends "base.html.j2" %}
+
+{% block title %}{{ _('Interactive Resume Builder') }}{% endblock %}
+
+{% block content %}
+<h1>🧱 {{ _('Resume Builder') }}</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div>
+      {% for category, message in messages %}
+        <div style="
+          padding: 10px;
+          margin-bottom: 10px;
+          border: 1px solid #ccc;
+          background-color:
+            {% if category == 'success' %}#d4edda
+            {% elif category == 'danger' %}#f8d7da
+            {% else %}#fff3cd{% endif %};
+          color:
+            {% if category == 'success' %}#155724
+            {% elif category == 'danger' %}#721c24
+            {% else %}#856404{% endif %};
+        ">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ✅ نموذج إضافة قسم جديد -->
+<h2>➕ {{ _('Add New Section') }}</h2>
+<form method="POST" action="{{ url_for('admin_builder.add_resume_section') }}">
+    <label>{{ _('Title') }}:</label>
+    <input type="text" name="title" required>
+
+    <label>{{ _('Language') }}:</label>
+    <select name="lang">
+        <option value="en">{{ _('English') }}</option>
+        <option value="ar">{{ _('Arabic') }}</option>
+        <option value="de">{{ _('German') }}</option>
+    </select>
+
+    <label>{{ _('Order') }}:</label>
+    <input type="number" name="order" min="1" value="1" required>
+
+    <button type="submit">✅ {{ _('Add Section') }}</button>
+</form>
+
+<hr>
+
+<!-- ✅ عرض الأقسام -->
+{% for section in sections %}
+    <div id="section-box-{{ section.id }}" style="border: 1px solid #ccc; margin-bottom: 20px; padding: 15px;">
+
+        <h2 style="display: inline;">
+            {{ section.title }} ({{ section.lang }}) ({{ section.order }})
+            {% if not section.is_visible %}<span style="color: red;">[{{ _('Hidden') }}]</span>{% endif %}
+        </h2>
+
+        <!-- أزرار الإدارة -->
+        <span style="margin-left: 10px;">
+            <button onclick="toggleEditForm({{ section.id }})">✏️</button>
+
+            <form method="POST" action="{{ url_for('admin_builder.delete_resume_section', section_id=section.id) }}"
+                  style="display:inline;" onsubmit="return confirm('{{ _('❗ Are you sure you want to delete this section?') }}');">
+                <button type="submit" style="color: red;">🗑</button>
+            </form>
+
+            <!-- زر ⬆️ -->
+            <form method="POST" action="{{ url_for('admin_builder.move_up', section_id=section.id) }}" style="display:inline;">
+                <button type="submit">⬆️</button>
+            </form>
+
+            <!-- زر ⬇️ -->
+            <form method="POST" action="{{ url_for('admin_builder.move_down', section_id=section.id) }}" style="display:inline;">
+                <button type="submit">⬇️</button>
+            </form>
+
+            <!-- زر 👁️/🚫 -->
+            <form method="POST" action="{{ url_for('admin_builder.toggle_visibility', section_id=section.id) }}" style="display:inline;">
+                <button type="submit" title="{{ _('Toggle Visibility') }}">
+                    {% if section.is_visible %}
+                        👁️
+                    {% else %}
+                        🚫
+                    {% endif %}
+                </button>
+            </form>
+        </span>
+
+        <!-- ✅ نموذج تعديل القسم -->
+        <div id="edit-form-{{ section.id }}" style="display: none; margin-top: 10px;">
+            <form method="POST" action="{{ url_for('admin_builder.edit_resume_section', section_id=section.id) }}">
+                <label>{{ _('Title') }}:</label>
+                <input type="text" name="title" value="{{ section.title }}" required>
+
+                <label>{{ _('Language') }}:</label>
+                <select name="lang">
+                    {% for code, name in [("en", _('English')), ("ar", _('Arabic')), ("de", _('German'))] %}
+                        <option value="{{ code }}" {% if section.lang == code %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label>{{ _('Order') }}:</label>
+                <input type="number" name="order" value="{{ section.order }}" required>
+
+                <button type="submit">💾 {{ _('Save') }}</button>
+            </form>
+        </div>
+
+        <!-- ✅ عرض الفقرات والحقول -->
+        {% for paragraph in section.paragraphs %}
+            <div style="margin-left: 20px; margin-bottom: 15px;">
+                <h3>📄 {{ _('Paragraph') }} – {{ paragraph.type }} {% if not paragraph.is_visible %}<span style="color: red;">[{{ _('Hidden') }}]</span>{% endif %}</h3>
+                <ul style="margin-left: 20px;">
+                    {% for field in paragraph.fields %}
+                        {% if field.is_visible %}
+                            <li><strong>{{ field.key }}:</strong> {{ field.value }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endfor %}
+
+<!-- ✅ JavaScript لعرض/إخفاء نموذج التعديل -->
+<script>
+function toggleEditForm(id) {
+    const el = document.getElementById("edit-form-" + id);
+    el.style.display = (el.style.display === "none") ? "block" : "none";
+}
+</script>
+
+{% endblock %}
