@@ -1,50 +1,49 @@
-# 🧱 Resume Builder – Step 02
+# 🧱 Resume Builder – Admin Panel Phase
 
-**The first stage of an interactive resume management system built with Flask**
-
----
-
-## 🎯 Purpose of This Stage
-
-Provide a dynamic interface to manage resume sections professionally, including:
+This stage of the `lebenslauf` project represents the **Admin Interface** for dynamically managing the structure of a multilingual resume.
 
 ---
 
-## 🧠 Technologies Used
+## ✅ Features Implemented in This Phase
 
+### 🧩 Core Components:
 
-
----
-
-## 📂 Project Structure (Simplified)
-
-
+- **Resume Sections** – major categories (e.g., Experience, Skills, Projects)
+- **Paragraphs** – content blocks within each section
+- **Fields** – key-value pairs inside each paragraph (e.g., Role, Date, Company)
 
 ---
 
-## 🚀 Getting Started
+### 🛠️ Functionality Highlights:
 
+- Full CRUD support for:
+  - Resume Sections
+  - Paragraphs
+  - Fields
 
-
----
-
-## 📌 Notes
-
-
+- Reordering with ↑ and ↓
+- Toggle visibility on any element
+- Flash messages for user feedback
+- Dynamic language support using `Flask-Babel`
+- Clean and flexible SQLAlchemy models
+- Clear separation of admin and public logic
 
 ---
 
 ## 🛠️ Next Step
 
-> ✅ Step03: Manage resume paragraphs dynamically under each section.
+> 👉 [Go to llol_step03 →](https://github.com/TamerOnLine/llol_step03)
+
+The next phase will focus on:
+- Organizing admin routes into a dedicated folder
+- Improving developer experience and modularity
 
 ---
 
-
 ## 📜 License
 
-This project is open-source under the MIT License. Feel free to explore and build upon it.
-
+This project is open-source under the MIT License.  
+Feel free to explore and build upon it.
 
 ---
 

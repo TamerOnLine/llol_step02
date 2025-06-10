@@ -43,7 +43,7 @@ class ResumeParagraph(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     resume_section_id = db.Column(db.Integer, db.ForeignKey('resume_section.id'), nullable=False)
-    type = db.Column(db.String(50), nullable=False)  # e.g., basic, with_description, with_date
+    field_type = db.Column("type", db.String(50), nullable=False)  # e.g., basic, with_description, with_date
     order = db.Column(db.Integer, nullable=False)
     is_visible = db.Column(db.Boolean, default=True)
 
@@ -63,6 +63,8 @@ class ResumeField(db.Model):
     resume_paragraph_id = db.Column(db.Integer, db.ForeignKey('resume_paragraph.id'), nullable=False)
     key = db.Column(db.String(50), nullable=False)  # e.g., title, description, date
     value = db.Column(db.Text, nullable=True)
+    field_type = db.Column("type", db.String(50), nullable=False, default='text')
+    order = db.Column(db.Integer, default=0)
     is_visible = db.Column(db.Boolean, default=True)
 
 

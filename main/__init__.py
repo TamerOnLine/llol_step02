@@ -5,6 +5,9 @@ from .models.models import (
 )
 from .routes.admin_routes import admin_bp
 from .routes.admin_builder_routes import admin_builder_bp
+from .routes.admin_paragraph import admin_paragraph
+from .routes.admin_field import admin_field
+
 
 from .routes.public_routes import public_bp
 from .routes.main_routes import main_bp
@@ -41,7 +44,9 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(public_bp)
     app.register_blueprint(admin_builder_bp)
-
+    app.register_blueprint(admin_paragraph)
+    app.register_blueprint(admin_field)
+    
 
     with app.app_context():
         db_path = os.path.join(app.instance_path, 'lebenslauf.db')
